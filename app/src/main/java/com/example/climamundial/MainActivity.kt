@@ -11,17 +11,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.climamundial.commons.CommonsValues
 import com.example.climamundial.ui.theme.ClimaMundialTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        CommonsValues.context = applicationContext
+
         setContent {
             ClimaMundialTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "Samuel",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
