@@ -10,7 +10,7 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun ClimaScreen(
+fun ClimateScreen(
     navController: NavController,
     innerPadding: PaddingValues
 ) {

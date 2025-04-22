@@ -6,12 +6,17 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.example.climamundial.commons.CommonsValues
+import com.example.climamundial.ui.FormScreen
+import com.example.climamundial.ui.navegation.AppNavigation
+import com.example.climamundial.ui.navegation.Screens
 import com.example.climamundial.ui.theme.ClimaMundialTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,16 +27,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             ClimaMundialTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Samuel",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MainScreen()
             }
         }
     }
 }
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -47,4 +48,24 @@ fun GreetingPreview() {
     ClimaMundialTheme {
         Greeting("Android")
     }
+}
+
+@Composable
+fun MainScreen() {
+    val navController = rememberNavController()
+
+    val navigationItems = listOf(
+        Screens.FormScreen,
+        Screens.ClimateScreen
+    )
+
+    Scaffold(
+        content = { innerPadding ->
+            AppNavigation(
+                navController = navController,
+                startDest = Screens.FormScreen,
+                innerPadding = innerPadding
+            )
+        }
+    )
 }
