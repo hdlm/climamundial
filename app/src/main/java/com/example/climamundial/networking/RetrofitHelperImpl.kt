@@ -50,8 +50,7 @@ class RetrofitHelperImpl : RetrofitHelper {
 
     companion object {
         const val BASE_URL = "https://api.openweathermap.org/data/3.0/"
-        //TODO colocar el valor de la key de la api
-        const val API_KEY = "colocar_aqui_el_valor_de_la_key_de_la_api"
+        const val API_KEY = "55bca60ac535293ccbcf135720e7d8b6"
         private const val REQUEST_TIMEOUT = 60L
 
     }
