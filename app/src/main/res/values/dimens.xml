@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="side_separation">5.dp</dimen>
+    <dimen name="side_separation_2x">10.dp</dimen>
+    <dimen name="icon_huge_size">70dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="line_spacing">4dp</dimen>
+    <dimen name="top_bar_height">56dp</dimen>
+
+</resources>
