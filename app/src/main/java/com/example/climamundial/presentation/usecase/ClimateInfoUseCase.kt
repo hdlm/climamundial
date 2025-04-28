@@ -16,7 +16,8 @@ class ClimateInfoUseCase: KoinComponent {
     private val climaRepository: ClimaRepository
         get() = get()
 
-    operator fun invoke(): Flow<List<CurrentWeatherDto>> =
-        climaRepository.fetchCurrentWeather(latitud = lat, longitud = lon, appid = )
+    //TODO descomentar en cuanto se pueda
+//    operator fun invoke(): Flow<List<CurrentWeatherDto>> =
+//        climaRepository.fetchCurrentWeather(latitud = lat, longitud = lon, appid = )
 }
 

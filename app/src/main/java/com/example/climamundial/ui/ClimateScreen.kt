@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.climamundial.presentation.presenters.ClimateScreenUiState
-import com.example.climamundial.presentation.presenters.ClimateScreenViewModel
+import com.example.climamundial.presentation.presenters.ClimateViewModel
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
 import ir.ehsannarmani.compose_charts.models.DividerProperties
@@ -41,6 +42,7 @@ import ir.ehsannarmani.compose_charts.models.Line
 import ir.ehsannarmani.compose_charts.models.LineProperties
 import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import ir.ehsannarmani.compose_charts.models.ZeroLineProperties
+import org.koin.androidx.compose.koinViewModel
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +50,7 @@ import ir.ehsannarmani.compose_charts.models.ZeroLineProperties
 fun ClimateScreen(
     navController: NavController,
     innerPadding: PaddingValues,
-    viewModel: ClimateScreenViewModel
+    viewModel: ClimateViewModel = koinViewModel()
 ) {
 
     val climateScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()

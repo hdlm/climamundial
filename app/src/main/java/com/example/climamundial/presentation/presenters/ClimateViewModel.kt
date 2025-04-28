@@ -1,20 +1,17 @@
 package com.example.climamundial.presentation.presenters
 
-import androidx.compose.ui.graphics.Path.Companion.combine
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.climamundial.data.dtos.CurrentWeatherDto
-import com.example.climamundial.ui.ClimateScreen
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
 
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ClimateScreenViewModel : ViewModel(), KoinComponent {
+class ClimateViewModel : ViewModel(), KoinComponent {
     private val _weather = MutableStateFlow<List<CurrentWeatherDto>>(emptyList())
 
     private val refreshing = MutableStateFlow(false)
@@ -24,11 +21,11 @@ class ClimateScreenViewModel : ViewModel(), KoinComponent {
         get() = _uiState
 
     init {
-        viewModelScope.launch {
-            com.example.climamundial.commons.combine(
-
-            )
-        }
+//        viewModelScope.launch {
+//            com.example.climamundial.commons.combine(
+//
+//            )
+//        }
     }
 }
 

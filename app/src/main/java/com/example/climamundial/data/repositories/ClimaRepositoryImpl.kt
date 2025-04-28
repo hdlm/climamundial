@@ -29,21 +29,22 @@ class ClimaRepositoryImpl : ClimaRepository {
 
         var resp : CurrentWeatherDto? = null
 
-        try {
-            val retrofitHelper: RetrofitHelper = get()
-            val response =
-                (retrofitHelper.buildService(ClimaApiService::class.java).fetchClima(url))
-            if (response.isSuccessful) {
-                Log.d(TAG, "$myfun -> fetching conversion of weather successful")
-                response.body()?.let {
-                    resp = it
-                }
-            } else {
-                throw Exception("The fetching of the Weather failed.")
-            }
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
+        //TODO descomentar en cuanto se pueda
+//        try {
+//            val retrofitHelper: RetrofitHelper = get()
+//            val response =
+//                (retrofitHelper.buildService(ClimaApiService::class.java).fetchClima(url))
+//            if (response.isSuccessful) {
+//                Log.d(TAG, "$myfun -> fetching conversion of weather successful")
+//                response.body()?.let {
+//                    resp = it
+//                }
+//            } else {
+//                throw Exception("The fetching of the Weather failed.")
+//            }
+//        } catch (ex: Exception) {
+//            ex.printStackTrace()
+//        }
 
         return resp
     }
