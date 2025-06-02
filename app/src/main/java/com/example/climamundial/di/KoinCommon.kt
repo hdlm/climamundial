@@ -17,6 +17,13 @@ object Modules {
         factory { ClimateInfoUseCase() }
     }
 
+    val instrumentedTestModule = module {
+        single<RetrofitHelper> { RetrofitHelperImpl() }
+        factory<ClimaRepository> { ClimaRepositoryImpl() }
+        factory { ClimateInfoUseCase() }
+    }
+
+
     val unitTestModule = module {
 //        Module.factory { Gson() }
 //        Module.factory<RetrofitHelper> { RetrofitHelperImpl() }

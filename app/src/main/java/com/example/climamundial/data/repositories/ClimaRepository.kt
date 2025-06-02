@@ -5,5 +5,5 @@ import com.example.climamundial.data.dtos.CurrentWeatherDto
 interface ClimaRepository {
 
     // Current and forecasts weather data
-    suspend fun fetchCurrentWeather(latitud: Double, longitud: Double, appid: String): CurrentWeatherDto?
+    suspend fun fetchCurrentWeather(latitud: Double, longitud: Double, appKey: String): CurrentWeatherDto?
 }
