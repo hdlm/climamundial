@@ -7,19 +7,45 @@ plugins {
 
 android {
     namespace = "com.example.climamundial"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.climamundial"
         minSdk = 28
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments(
+                    mapOf("room.schemaLocation" to "$projectDir/schemas")
+                )
+            }
+        }
+
+        testOptions {
+            unitTests {
+                isReturnDefaultValues = true
+                isIncludeAndroidResources = true
+            }
+            animationsDisabled = true
+        }
     }
+
     buildTypes {
+        debug {
+            buildFeatures.buildConfig = true
+            isDebuggable = true
+        }
         release {
+            buildFeatures.buildConfig = true
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -27,25 +53,30 @@ android {
             )
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+
+
+    sourceSets {
+        getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("test").java.srcDirs("src/test/kotlin")
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = "21"
     }
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.15"
+    }
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -54,7 +85,6 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.androidx.navigation.runtime.android)
     implementation(libs.androidx.room.common.jvm)
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.gson)

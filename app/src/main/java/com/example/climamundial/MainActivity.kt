@@ -22,7 +22,7 @@ import com.example.climamundial.ui.theme.ClimaMundialTheme
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
-import org.koin.core.error.ApplicationAlreadyStartedException
+import org.koin.core.error.KoinApplicationAlreadyStartedException
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 androidLogger()
                 modules(appModule)
             }
-        } catch (ex: ApplicationAlreadyStartedException) {
+        } catch (ex: KoinApplicationAlreadyStartedException) {
             // ignore
         }
 
