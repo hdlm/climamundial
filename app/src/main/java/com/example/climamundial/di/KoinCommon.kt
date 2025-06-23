@@ -5,8 +5,9 @@ import com.example.climamundial.data.repositories.ClimaRepositoryImpl
 import com.example.climamundial.networking.RetrofitHelper
 import com.example.climamundial.networking.RetrofitHelperImpl
 import com.example.climamundial.presentation.presenters.ClimateViewModel
-import com.example.climamundial.presentation.usecase.ClimateInfoUseCase
-import org.koin.androidx.viewmodel.dsl.viewModel
+import com.example.climamundial.presentation.usecase.ClimaInfoUseCase
+import com.example.climamundial.presentation.usecase.ClimaInfoUseCaseImpl
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 object Modules {
@@ -14,13 +15,13 @@ object Modules {
         single<RetrofitHelper> { RetrofitHelperImpl() }
         factory<ClimaRepository> { ClimaRepositoryImpl() }
         viewModel { ClimateViewModel() }
-        factory { ClimateInfoUseCase() }
+        factory<ClimaInfoUseCase> { ClimaInfoUseCaseImpl() }
     }
 
     val instrumentedTestModule = module {
         single<RetrofitHelper> { RetrofitHelperImpl() }
         factory<ClimaRepository> { ClimaRepositoryImpl() }
-        factory { ClimateInfoUseCase() }
+        factory<ClimaInfoUseCase> { ClimaInfoUseCaseImpl() }
     }
 
 

@@ -1,7 +1,7 @@
 package com.example.climamundial.data.repositories
 
 import android.util.Log
-import com.example.climamundial.data.dtos.CurrentWeatherDto
+import com.example.climamundial.data.dtos.WeatherDto
 import com.example.climamundial.networking.RetrofitHelper
 import com.example.climamundial.networking.RetrofitHelperImpl
 import com.example.climamundial.networking.RetrofitHelperImpl.Companion.API_KEY
@@ -10,49 +10,51 @@ import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
 
+/** Prueba _integral_ para validar la carga de los datos a traves del web service */
 class ClimaRepositoryImpl : ClimaRepository, KoinComponent {
-    //    private val retrofitHelper by inject <RetrofitHelper>()
-
     override suspend fun fetchCurrentWeather(
         latitud: Double,
         longitud: Double,
-        appKey: String
-    ): CurrentWeatherDto? {
+        units: String,
+    ): Result<WeatherDto> {
+        val myfun = "fetchCurrentWeather()"
+        Log.i(TAG, "$myfun -> calling end-point with BASE_URL = ${RetrofitHelperImpl.BASE_URL}")
 
-        Log.d(TAG, "$myfun -> calling end-point with BASE_URL = ${RetrofitHelperImpl.BASE_URL}")
-
-        /*
-    https://api.openweathermap.org/data/3.0/onecall?lat={lat}&lon={lon}&exclude={part}&appid={API key}
-     */
-
-        //val url_prueba = "https://api.openweathermap.org/data/3.0/onecall?lat=33.44&lon=-94.04&appid={API key}"
-        val url =
-            "${RetrofitHelperImpl.BASE_URL}onecall?lat=${latitud}&lon=${longitud}&appid=${API_KEY}"
-        Log.d(TAG, "url: $url")
-
-        var resp: CurrentWeatherDto? = null
-
-        try {
+        return try {
             val retrofitHelper: RetrofitHelper = get()
             val response =
-                (retrofitHelper.buildService(ClimaApiService::class.java).fetchClima(url))
+                (retrofitHelper.buildService(ClimaApiService::class.java)
+                    .fetchWeatherForecast(
+                        lat = latitud,
+                        lon = longitud,
+                        units = units,
+                        appid = API_KEY
+                    ))
             if (response.isSuccessful) {
-                Log.d(TAG, "$myfun -> fetching conversion of weather successful")
-                response.body()?.let {
-                    resp = it
+                val weatherResponse = response.body()
+                if (weatherResponse != null) {
+                    Log.d(TAG, "$myfun -> fetching conversion of weather successful")
+                    Result.success(weatherResponse)
+                } else {
+                    val errorMessage = "API call successful but response body it is null"
+                    Log.e(TAG, "$myfun -> $errorMessage")
+                    Result.failure(Exception(errorMessage))
                 }
             } else {
-                throw Exception("The fetching of the Weather failed.")
+                val errorBody = response.errorBody()?.string()
+                val errorMessage = "Fetching weather failed with code ${response.code()}: $errorBody"
+                Log.e(TAG, "$myfun -> $errorMessage")
+                Result.failure(Exception(errorMessage))
             }
         } catch (ex: Exception) {
-            ex.printStackTrace()
+            Log.e(TAG, "$myfun -> Exception during weather fetch: ${ex.message}")
+            Result.failure(ex)
         }
-        return resp
+
     }
 
     companion object {
-        const val TAG = "ClimaRepositoryImpl"
-        const val myfun = "fetchCurrentWeather"
+        const val TAG = "zod.ClimaRepositoryImpl"
     }
 }
 
