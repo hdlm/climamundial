@@ -54,7 +54,7 @@ class ClimaRepositoryImpl : ClimaRepository, KoinComponent {
     }
 
     companion object {
-        const val TAG = "zod.ClimaRepositoryImpl"
+        const val TAG = "zor.ClimaRepositoryImpl"
     }
 }
 
