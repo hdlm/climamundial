@@ -67,7 +67,6 @@ class ClimaInfoUseCaseTest : KoinTest {
     @Test
     fun `test fetching Weather through ClimaInfoUseCase and succeeds`() = runTest {
         //<editor-fold desc="mock data" defaultstate="collapsed">
-
         val cityObject = City(
             id = 3163858,
             name = "Zocca",
