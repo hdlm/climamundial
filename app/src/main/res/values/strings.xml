@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Clima Mundial</string>
+    <string name="image_content_description">Imagen</string>
 </resources>
