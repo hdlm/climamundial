@@ -2,13 +2,18 @@ package com.example.climamundial.presentation.usecase
 
 import com.example.climamundial.data.dtos.WeatherDto
 import com.example.climamundial.data.repositories.ClimaRepository
+import com.example.climamundial.data.repositories.ClimaRepositoryImpl
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import okhttp3.Dispatcher
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
+import org.koin.core.component.getScopeId
 
 class ClimaInfoUseCaseImpl : ClimaInfoUseCase, KoinComponent {
-    override val repository: ClimaRepository
+    val repository: ClimaRepository
         get() = get()
 
     override fun invoke(

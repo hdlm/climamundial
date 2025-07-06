@@ -1,8 +1,6 @@
 package com.example.climamundial.ui
 
-import android.annotation.SuppressLint
 import android.util.Log
-import androidx.annotation.OptIn
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
@@ -15,8 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -44,15 +40,12 @@ import ir.ehsannarmani.compose_charts.models.StrokeStyle
 import ir.ehsannarmani.compose_charts.models.ZeroLineProperties
 import org.koin.androidx.compose.koinViewModel
 
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ClimateScreen(
     navController: NavController,
     innerPadding: PaddingValues,
     viewModel: ClimateViewModel = koinViewModel()
 ) {
-
     val climateScreenUiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     when (val uiState = climateScreenUiState) {
@@ -85,7 +78,7 @@ fun ClimateScreenLoading(modifier: Modifier = Modifier){
                     .size(areaSize)
                     .align(Alignment.Center),
                 strokeWidth = 8.dp,
-                color = MaterialTheme.colorScheme.surface
+                color = Color.Black
             )
 
         }
@@ -113,15 +106,14 @@ fun ClimateScreenError(msg: String, onRetry: () -> Unit, modifier: Modifier = Mo
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun ClimateScreenReady(
     navController: NavController,
     uiState: ClimateScreenUiState.Ready,
     innerPadding: PaddingValues
 ) {
-    var tempValues: List<Double> = listOf(19.5, 21.7, 24.2, 22.0, 22.9, 21.5, 19.0, 18.6)
+    val tempValuesDummy: List<Double> = listOf(19.5, 21.7, 24.2, 22.0, 22.9, 21.5, 19.0, 18.6)
+    val tempValues:List<Double> = uiState.weathers.temperatures
     Log.d(TAG, "ClimateScreen() -> composed / recomposed")
 
     Scaffold(
@@ -195,6 +187,5 @@ fun ClimateScreenReady(
         }
     }
 }
-
 
 private const val TAG = "ClimateScreen"

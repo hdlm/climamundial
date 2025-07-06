@@ -20,6 +20,7 @@ koinAnnotations = "2.1.0"
 coroutinesVersion = "1.10.2"
 roomCommonJvm = "2.7.2"
 roomVersion = "2.7.2"
+composecharts = "1.0.0"
 
 
 [libraries]

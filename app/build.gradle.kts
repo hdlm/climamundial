@@ -114,4 +114,5 @@ dependencies {
     implementation(libs.coroutines.android)
     testImplementation(libs.coroutines.test)
     testImplementation(kotlin("test"))
+    implementation(libs.compose.charts)
 }
