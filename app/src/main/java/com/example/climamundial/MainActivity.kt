@@ -4,9 +4,6 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,7 +12,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.climamundial.commons.CommonsValues
 import com.example.climamundial.di.Modules.appModule
-import com.example.climamundial.ui.FormScreen
 import com.example.climamundial.ui.navegation.AppNavigation
 import com.example.climamundial.ui.navegation.Screens
 import com.example.climamundial.ui.theme.ClimaMundialTheme
@@ -70,7 +66,6 @@ fun MainScreen() {
     val navController = rememberNavController()
 
     val navigationItems = listOf(
-        Screens.FormScreen,
         Screens.ClimateScreen
     )
 
@@ -78,7 +73,7 @@ fun MainScreen() {
         content = { innerPadding ->
             AppNavigation(
                 navController = navController,
-                startDest = Screens.FormScreen,
+                startDest = Screens.ClimateScreen,
                 innerPadding = innerPadding
             )
         }

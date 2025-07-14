@@ -8,7 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.climamundial.ui.ClimateScreen
-import com.example.climamundial.ui.FormScreen
+import com.example.climamundial.ui.InputCoordinatesData
 
 @Composable
 fun AppNavigation(
@@ -18,31 +18,15 @@ fun AppNavigation(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.FormScreen.route
+        startDestination = Screens.ClimateScreen.route
     ) {
-        //Formulario
-        composable(Screens.FormScreen.route) {
-            FormScreen(
-                navController = navController,
-                innerPadding = innerPadding,
-            )
-        }
-
-        //Clima
         composable(
             route = Screens.ClimateScreen.route,
-            arguments = listOf(
-                navArgument("lat") { type = NavType.StringType },
-                navArgument("lon") { type = NavType.StringType }
-            )
         ) { backStackEntry ->
-            val lat = backStackEntry.arguments?.getString("lat") ?: ""
-            val lon = backStackEntry.arguments?.getString("lon") ?: ""
-
             ClimateScreen(
                 navController = navController,
                 innerPadding = innerPadding
             )
         }
-}
     }
+}

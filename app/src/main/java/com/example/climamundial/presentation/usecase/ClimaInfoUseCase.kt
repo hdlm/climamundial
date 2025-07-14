@@ -2,6 +2,7 @@ package com.example.climamundial.presentation.usecase
 
 import com.example.climamundial.data.dtos.WeatherDto
 import com.example.climamundial.data.repositories.ClimaRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 
 interface ClimaInfoUseCase {
@@ -12,7 +13,15 @@ interface ClimaInfoUseCase {
     operator fun invoke(
         latitud: Double,
         longitud: Double,
-        units: String
+        units: String,
     ): Flow<Result<WeatherDto>>
+
+    operator fun invoke(
+        latitud: Double,
+        longitud: Double,
+        units: String,
+        onDone: (Result<WeatherDto>) -> Unit,
+        scope: CoroutineScope
+    )
 }
 
