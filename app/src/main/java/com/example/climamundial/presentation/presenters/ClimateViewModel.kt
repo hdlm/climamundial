@@ -1,5 +1,6 @@
 package com.example.climamundial.presentation.presenters
 
+import android.health.connect.datatypes.units.Temperature
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -14,9 +15,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import java.time.Instant
+import java.time.ZoneOffset
 
 data class GraphData (
-    val temperatures: List<Double>
+    val temperatures: List<Double>,
+    val dailyTemperature: Map<String, List<Double>> = mapOf()
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -64,10 +68,22 @@ class ClimateViewModel : ViewModel(), KoinComponent {
                         } else {
                             val result = weatherResult.getOrNull()
                             if (result != null) {
-                                val temperatures = result.list.map { it.main.temp }
-                                val graphData = GraphData(temperatures = temperatures)
+                                val city = result.city.name
+                                val temperatures: List<Double> = result.list.map { it.main.temp }
+                                val daily = result.list
+                                    .groupBy { item ->
+                                        val instant = Instant.ofEpochSecond(item.dt)                 // convierte a fecha
+                                        val localDate = instant.atZone(ZoneOffset.UTC).toLocalDate() // ajusta zona si necesario
+                                        localDate.toString()                                         // "2025-07-21"
+                                    }
+                                    .mapValues { it.value.map { w -> w.main.temp } }
+                                val graphData: GraphData = GraphData(
+                                    temperatures = temperatures,
+                                    dailyTemperature = daily
+                                )
                                 ClimateScreenUiState.Ready(
-                                    weathers = graphData
+                                    weathers = graphData,
+                                    cityName = city
                                 )
                             } else {
                                 ClimateScreenUiState.Error("No data available")
@@ -104,6 +120,10 @@ class ClimateViewModel : ViewModel(), KoinComponent {
         _coordinates.value = Pair(lat, lon)
     }
 
+    fun setUiState(newState: ClimateScreenUiState) {
+        _uiState.value = newState
+    }
+
     companion object {
         const val TAG = "ClimateViewModel"
     }
@@ -120,6 +140,7 @@ sealed interface ClimateScreenUiState {
     data object InputCoordinates: ClimateScreenUiState
 
     data class Ready(
-        val weathers: GraphData
+        val weathers: GraphData,
+        val cityName: String
     ): ClimateScreenUiState
 }

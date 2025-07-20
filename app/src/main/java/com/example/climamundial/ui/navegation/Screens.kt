@@ -13,5 +13,4 @@ sealed class Screens(
     val icon: ImageVector
 ) {
     data object ClimateScreen : Screens("ClimateScreen", "Clima", Icons.AutoMirrored.Filled.List)
-
 }
