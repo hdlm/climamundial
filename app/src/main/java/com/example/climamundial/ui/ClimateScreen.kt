@@ -4,13 +4,12 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.core.EaseInOutCubic
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,15 +36,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.climamundial.R
 import com.example.climamundial.presentation.presenters.ClimateScreenUiState
 import com.example.climamundial.presentation.presenters.ClimateViewModel
 import com.example.climamundial.presentation.presenters.GraphData
+import com.example.climamundial.presentation.presenters.IconData
 import com.example.climamundial.ui.theme.ClimaMundialTheme
 import ir.ehsannarmani.compose_charts.LineChart
 import ir.ehsannarmani.compose_charts.models.AnimationMode
@@ -298,12 +300,66 @@ fun InputCoordinatesData(
     )
 }
 
+@Composable
+fun WeatherIcon(code: String, desc: String) {
+    Log.d("WeatherIcon", "Código recibido: $code")
+    val normalizedCode = code.trim().lowercase()
+
+    val iconResId = when (normalizedCode) {
+        // Cielo despejado
+        "01d" -> R.drawable.dia
+        "01n" -> R.drawable.noche
+
+        // Pocas nubes
+        "02d", "02n" -> R.drawable.pocas_nubes
+
+        // Nubes dispersas
+        "03d", "03n" -> R.drawable.nubes_dispersas
+
+        // Nubes rotas / cubiertas
+        "04d", "04n" -> R.drawable.nubes_dispersas
+
+        // Lluvia ligera / chubascos
+        "09d", "09n" -> R.drawable.lluvia
+
+        // Lluvia
+        "10d", "10n" -> R.drawable.lluvia_ligera
+
+        // Tormenta eléctrica
+        "11d", "11n" -> R.drawable.tormenta_electrica
+
+        // Nieve
+        "13d", "13n" -> R.drawable.nieve
+
+        // Neblina
+        "50d", "50n" -> R.drawable.neblina
+
+        else -> {
+            Log.w("WeatherIcon", "⚠️ Código no reconocido: $normalizedCode")
+            R.drawable.error404
+        }
+    }
+
+    Box(
+        modifier = Modifier.fillMaxWidth().padding(top = 6.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(id = iconResId),
+            contentDescription = desc,
+            modifier = Modifier.size(150.dp)
+        )
+    }
+}
 
 @Composable
 fun ShowWeather(
     uiState: ClimateScreenUiState.Ready,
 ) {
     Log.d(TAG, "ShowWeather() - composed / recomposed")
+
+    val iconCode = uiState.iconData.iconCode
+    val iconDescription = uiState.iconData.iconDesc
 
     val tempValues:List<Double> = uiState.weathers.temperatures
     val colorPalette = listOf(
@@ -317,29 +373,30 @@ fun ShowWeather(
     val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
     val outputFormat = SimpleDateFormat("d MMM", Locale("es", "ES"))
 
-    val lines = uiState.weathers.dailyTemperature.entries.mapIndexed { index, entry ->
-        val (day, temps) = entry
-
-        val parsedDate = inputFormat.parse(day)
-        val dateLabel = outputFormat.format(parsedDate)
-
-        Line(
-                                label = dateLabel,
-                                values = temps,
-                                color = SolidColor(colorPalette[index % colorPalette.size]),
-                                strokeAnimationSpec = tween(2000,
-                                    easing = EaseInOutCubic),
-                                drawStyle = DrawStyle.Stroke(
-                                    width =2.dp,
-                                ),
-                                dotProperties = DotProperties(
-                                    enabled = true,
-                                    radius = 3.5.dp,
-                                    color = SolidColor(Color.Red),
-                                    animationEnabled = true,
-                                )
-                            )
-    }
+    //TODO() Separar la gráfica por día
+//    val lines = uiState.weathers.dailyTemperature.entries.mapIndexed { index, entry ->
+//        val (day, temps) = entry
+//
+//        val parsedDate = inputFormat.parse(day)
+//        val dateLabel = outputFormat.format(parsedDate)
+//
+//        Line(
+//                                label = dateLabel,
+//                                values = temps,
+//                                color = SolidColor(colorPalette[index % colorPalette.size]),
+//                                strokeAnimationSpec = tween(2000,
+//                                    easing = EaseInOutCubic),
+//                                drawStyle = DrawStyle.Stroke(
+//                                    width =2.dp,
+//                                ),
+//                                dotProperties = DotProperties(
+//                                    enabled = true,
+//                                    radius = 3.5.dp,
+//                                    color = SolidColor(Color.Red),
+//                                    animationEnabled = true,
+//                                )
+//                            )
+//    }
 
     Scaffold(
         topBar = {},
@@ -365,9 +422,16 @@ fun ShowWeather(
                         .align(Alignment.CenterHorizontally)
                 )
 
-                //TODO() Futuro espacio para un icono
-                Spacer(
-                    modifier = Modifier.padding(all = 150.dp)
+                WeatherIcon(iconCode, iconDescription)
+
+                Text(
+                    text = iconDescription.uppercase(Locale.getDefault()),
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .padding(top = 6.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
 
                 LineChart(
@@ -456,7 +520,11 @@ fun ShowWeatherPreview() {
             weathers = GraphData(
                 temperatures = listOf(23.5, 25.0, 22.0, 27.3, 24.8)
             ),
-            cityName = "Los Teques"
+            cityName = "Los Teques",
+            iconData = IconData(
+                iconCode = "01d",
+                iconDesc = ""
+            )
         )
         ShowWeather(
             mockReadyState

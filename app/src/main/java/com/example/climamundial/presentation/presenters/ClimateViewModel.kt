@@ -1,6 +1,5 @@
 package com.example.climamundial.presentation.presenters
 
-import android.health.connect.datatypes.units.Temperature
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,6 +20,11 @@ import java.time.ZoneOffset
 data class GraphData (
     val temperatures: List<Double>,
     val dailyTemperature: Map<String, List<Double>> = mapOf()
+)
+
+data class IconData (
+    val iconCode: String,
+    val iconDesc: String
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -69,6 +73,8 @@ class ClimateViewModel : ViewModel(), KoinComponent {
                             val result = weatherResult.getOrNull()
                             if (result != null) {
                                 val city = result.city.name
+                                val iconCode = result.list.firstOrNull()?.weather?.firstOrNull()?.icon?.trim()?.lowercase() ?: "01d"
+                                val iconDesc = result.list.firstOrNull()?.weather?.firstOrNull()?.description ?: ""
                                 val temperatures: List<Double> = result.list.map { it.main.temp }
                                 val daily = result.list
                                     .groupBy { item ->
@@ -81,9 +87,14 @@ class ClimateViewModel : ViewModel(), KoinComponent {
                                     temperatures = temperatures,
                                     dailyTemperature = daily
                                 )
+                                val iconData: IconData = IconData(
+                                    iconCode = iconCode,
+                                    iconDesc = iconDesc
+                                )
                                 ClimateScreenUiState.Ready(
                                     weathers = graphData,
-                                    cityName = city
+                                    cityName = city,
+                                    iconData = iconData
                                 )
                             } else {
                                 ClimateScreenUiState.Error("No data available")
@@ -141,6 +152,7 @@ sealed interface ClimateScreenUiState {
 
     data class Ready(
         val weathers: GraphData,
-        val cityName: String
+        val cityName: String,
+        val iconData: IconData
     ): ClimateScreenUiState
 }

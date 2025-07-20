@@ -21,6 +21,7 @@ coroutinesVersion = "1.10.2"
 roomCommonJvm = "2.7.2"
 roomVersion = "2.7.2"
 composecharts = "1.0.0"
+coil = "2.7.0"
 
 
 [libraries]
@@ -60,6 +61,7 @@ koin-test-junit = { group = "io.insert-koin", name = "koin-test-junit4", version
 coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesVersion" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesVersion"}
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

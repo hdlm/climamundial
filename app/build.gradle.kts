@@ -115,4 +115,5 @@ dependencies {
     testImplementation(libs.coroutines.test)
     testImplementation(kotlin("test"))
     implementation(libs.compose.charts)
+    implementation(libs.coil.compose)
 }
