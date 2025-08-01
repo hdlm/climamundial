@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.climamundial.commons.util.combine
 import com.example.climamundial.data.dtos.WeatherDto
+import com.example.climamundial.data.repositories.GeoRepository
 import com.example.climamundial.presentation.usecase.ClimaInfoUseCase
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
@@ -28,10 +29,10 @@ data class IconData (
 )
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class ClimateViewModel : ViewModel(), KoinComponent {
-
-    private val climateInfoUseCase: ClimaInfoUseCase by inject()
-
+class ClimateViewModel(
+    private val climateInfoUseCase: ClimaInfoUseCase,
+    private val geoRepository: GeoRepository
+) : ViewModel() {
     private val _weather = MutableStateFlow<Result<WeatherDto>?>(null)
     private var _coordinates = MutableStateFlow<Pair<Double,Double>>(Pair(1000.0,1000.0))
     val coordinates: Pair<Double,Double>
@@ -43,6 +44,25 @@ class ClimateViewModel : ViewModel(), KoinComponent {
         get() = _uiState
 
     private val refreshing = MutableStateFlow<Boolean>(false)
+
+    fun searchCity(cityName: String) {
+        viewModelScope.launch {
+            try {
+                val result = geoRepository.searchCityByName(
+                    city = cityName.trim(),
+                    limit = 1
+                )
+                result.onSuccess { geo ->
+                    setCoordinates(geo[0].lat, geo[0].lon)
+                }.onFailure {
+                    _uiState.value = ClimateScreenUiState.Error("No se pudo encontrar la ciudad")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error en búsqueda geocoding", e)
+                _uiState.value = ClimateScreenUiState.Error("Error al buscar ciudad")
+            }
+        }
+    }
 
     init {
         viewModelScope.launch {
@@ -127,7 +147,7 @@ class ClimateViewModel : ViewModel(), KoinComponent {
    }
 
     // Función para actualizar las coordenadas, lo que dispara la consulta
-    fun setCoordinates(lat: Double, lon: Double) {
+    private fun setCoordinates(lat: Double, lon: Double) {
         _coordinates.value = Pair(lat, lon)
     }
 

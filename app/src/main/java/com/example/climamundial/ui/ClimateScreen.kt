@@ -42,6 +42,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.climamundial.R
 import com.example.climamundial.presentation.presenters.ClimateScreenUiState
@@ -86,13 +87,13 @@ fun  ClimateScreen(
             )
         }
         is ClimateScreenUiState.InputCoordinates -> {
-            val setCoordinates: (Double, Double) -> Unit = { lat, lon ->
-                Log.d(TAG, "setCoordinates() -> invoked, lat: $lat, lon: $lon")
-                viewModel.setCoordinates(lat, lon)
+            val searchCity: (String) -> Unit = { cityName ->
+                Log.d(TAG, "searchCity() -> invoked, city: $cityName")
+                viewModel.searchCity(cityName)
             }
             InputCoordinatesData(
                 navController = navController,
-                setCoordinates = setCoordinates
+                searchCity = searchCity
             )
         }
         is ClimateScreenUiState.Ready -> {
@@ -155,36 +156,27 @@ fun ClimateScreenError(msg: String, onRetry: () -> Unit, modifier: Modifier = Mo
 @Composable
 fun InputCoordinatesData(
     navController: NavController,
-    setCoordinates: (Double, Double) -> Unit,
+    searchCity: (String) -> Unit,
 ) {
     Log.i(TAG, "InputCoordinatesData() - composed/recomposed")
 
-    var latText by remember { mutableStateOf<String>("") }
-    var lonText by remember { mutableStateOf<String>("") }
+    var city by remember { mutableStateOf<String>("") }
 
     val onClick: () -> Unit = {
-        Log.i(TAG, "========== BOTÓN PRESIONADO ==========")
         Log.d(TAG, "onClick() -> invoked")
-        Log.d(TAG, "Lat input: '$latText', Lon input: '$lonText'")
 
-        if (latText.isNotEmpty() && lonText.isNotEmpty()) {
+        if (city.isNotEmpty()) {
             try {
-                val lat = latText.toDouble()
-                val lon = lonText.toDouble()
+                val cityName = city.trim().replaceFirstChar { it.uppercase() }
+                searchCity(cityName)
 
-                setCoordinates.invoke(lat, lon)
-
-            } catch (e: NumberFormatException) {
-                Log.e(TAG, "Error al convertir coordenadas: ${e.message}")
-                Log.e(TAG, "\tLatText: '$latText', LonText: '$lonText'")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error al concultar el clima de la ciudad: ${e.message}")
             }
         } else {
-            Log.w(TAG, "Campos vacíos - Lat: '$latText', Lon: '$lonText'")
+            Log.w(TAG, "Campo vacío - Lat: '$city'")
         }
     }
-
-    // También log cuando cambian los campos
-    Log.d(TAG, "Current values - Lat: '$latText', Lon: '$lonText'")
 
     Scaffold(
         topBar = {},
@@ -221,46 +213,17 @@ fun InputCoordinatesData(
 
                     ) {
                         OutlinedTextField(
-                            value = latText,
+                            value = city,
                             onValueChange = { newValue ->
-                                Log.d(TAG, "Lat changed from '$latText' to '$newValue'")
-                                latText = newValue
+                                Log.d(TAG, "Lat changed from '$city' to '$newValue'")
+                                city = newValue
                             },
                             enabled = true,
                             label = { Text(
-                                text ="Latitud",
+                                text ="Nombre de la Ciudad",
                                 fontWeight = FontWeight.Bold
                                 ) },
-                            placeholder = { Text("Ej. 10.50") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                focusedLabelColor = Color.DarkGray,
-                                focusedBorderColor = Color(0xFF4FA67B),
-                                unfocusedBorderColor = Color(0xFF4FA67B),
-                                focusedContainerColor = Color.White,
-                                unfocusedContainerColor = Color.White,
-                                cursorColor = Color(0xFF4FA67B),
-                                focusedTextColor = Color.Black
-                            ),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(10.dp, top = 2.dp)
-                        )
-
-                        OutlinedTextField(
-                            value = lonText,
-                            onValueChange = { newValue ->
-                                Log.d(TAG, "Lon changed from '$lonText' to '$newValue'")
-                                lonText = newValue
-                            },
-                            enabled = true,
-                            label = { Text(
-                                text = "Longitud",
-                                fontWeight = FontWeight.Bold,
-                                ) },
-                            placeholder = { Text("Ej. -66.93") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            placeholder = { Text("Ej. Caracas") },
                             shape = RoundedCornerShape(12.dp),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedLabelColor = Color.DarkGray,

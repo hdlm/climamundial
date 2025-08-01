@@ -37,7 +37,7 @@ class ClimaInfoUseCaseNetworkTest : KoinTest {
             modules(
                 module {
                     single<RetrofitHelper> { RetrofitHelperImpl() }
-                    single<ClimaRepository> { ClimaRepositoryImpl() }
+                    single<ClimaRepository> { ClimaRepositoryImpl(get()) }
                     single<ClimaInfoUseCase> { ClimaInfoUseCaseImpl() }
                 }
             )

@@ -10,10 +10,10 @@ class RetrofitHelperImpl : RetrofitHelper {
 
     private fun provideNetworkURL(): String = BASE_URL
 
-    private fun provideHttpLogger(): HttpLoggingInterceptor = HttpLoggingInterceptor().setLevel(
+    override  fun provideHttpLogger(): HttpLoggingInterceptor = HttpLoggingInterceptor().setLevel(
         HttpLoggingInterceptor.Level.BODY)
 
-    private fun provideOKHttp(logger: HttpLoggingInterceptor): OkHttpClient {
+    override fun provideOKHttp(logger: HttpLoggingInterceptor): OkHttpClient {
         val okHttpClient = OkHttpClient.Builder()
 
         // see: SocketTimeoutException
@@ -49,7 +49,7 @@ class RetrofitHelperImpl : RetrofitHelper {
     }
 
     companion object {
-        const val BASE_URL = "https://api.openweathermap.org/data/2.5/"
+        const val BASE_URL = "https://api.openweathermap.org/"
         const val API_KEY = "55bca60ac535293ccbcf135720e7d8b6"
         private const val REQUEST_TIMEOUT = 60L
 
