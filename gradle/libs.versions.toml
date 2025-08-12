@@ -22,6 +22,7 @@ roomCommonJvm = "2.7.2"
 roomVersion = "2.7.2"
 composecharts = "1.0.0"
 coil = "2.7.0"
+lifecycleViewmodelKtx = "2.9.2"
 
 
 [libraries]
@@ -62,6 +63,7 @@ coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-
 coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesVersion" }
 coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesVersion"}
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

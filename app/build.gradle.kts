@@ -92,6 +92,7 @@ dependencies {
     implementation(libs.retrofit.coroutines)
     implementation(libs.androidx.navigation.compose)
     implementation (libs.compose.charts)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     testImplementation(libs.mockk.test)

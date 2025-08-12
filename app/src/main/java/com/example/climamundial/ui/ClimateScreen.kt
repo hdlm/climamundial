@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
@@ -38,11 +37,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.climamundial.R
 import com.example.climamundial.presentation.presenters.ClimateScreenUiState
@@ -315,6 +312,40 @@ fun WeatherIcon(code: String, desc: String) {
     }
 }
 
+fun weatherDescTranslate(desc: String): String {
+    return when (desc) {
+        // Cielo despejado
+        "01d" -> "Día Despejado"
+        "01n" -> "Noche Despejada"
+
+        // Pocas nubes
+        "02d", "02n" -> "Pocas Nubes"
+
+        // Nubes dispersas
+        "03d", "03n" -> "Nubes Dispersas"
+
+        // Nubes rotas / cubiertas
+        "04d", "04n" -> "Nubes Rotas"
+
+        // Lluvia ligera / chubascos
+        "09d", "09n" -> "Lluvia Ligera"
+
+        // Lluvia
+        "10d", "10n" -> "Lluvia"
+
+        // Tormenta eléctrica
+        "11d", "11n" -> "Tormenta Eléctrica"
+
+        // Nieve
+        "13d", "13n" -> "Nieve"
+
+        // Neblina
+        "50d", "50n" -> "Neblina"
+
+        else -> "Condición desconocida"
+    }
+}
+
 @Composable
 fun ShowWeather(
     uiState: ClimateScreenUiState.Ready,
@@ -323,6 +354,8 @@ fun ShowWeather(
 
     val iconCode = uiState.iconData.iconCode
     val iconDescription = uiState.iconData.iconDesc
+
+    val weatherDesc = weatherDescTranslate(iconCode)
 
     val tempValues:List<Double> = uiState.weathers.temperatures
     val colorPalette = listOf(
@@ -376,7 +409,7 @@ fun ShowWeather(
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = "Clima de ${uiState.cityName}",
+                    text = "Clima de ${uiState.cityName} (Esta Semana)",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,
@@ -388,7 +421,7 @@ fun ShowWeather(
                 WeatherIcon(iconCode, iconDescription)
 
                 Text(
-                    text = iconDescription.uppercase(Locale.getDefault()),
+                    text = weatherDesc,
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color.Black,

@@ -148,7 +148,11 @@ class ClimateViewModel(
 
     // Función para actualizar las coordenadas, lo que dispara la consulta
     private fun setCoordinates(lat: Double, lon: Double) {
+        _weather.value = null
         _coordinates.value = Pair(lat, lon)
+        viewModelScope.launch {
+            delay(500)
+        }
     }
 
     fun setUiState(newState: ClimateScreenUiState) {
